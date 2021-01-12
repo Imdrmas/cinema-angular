@@ -1,0 +1,84 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <ul *ngIf="cities" class="list-group">
+        <li class="list-group-item list-group-item-danger">Find Cinemas By City</li>
+        <li [ngClass]="city==currentCity?'active':''" *ngFor="let city of cities._embedded.cities" class="list-group-item clickable"
+            (click)="onGetCinema(city)">{{city.name}}</li>
+      </ul>
+    </div>
+    <div class="col-md-9">
+      <div class="panel panel-danger">
+        <div class="panel-heading">Cinema For {{cityName}} </div>
+        <div class="panel-body">
+           <ul *ngIf="cinemas" class="nav nav-pills">
+             <li [ngClass]="cinema==currentCinema?'active':''" *ngFor="let cinema of cinemas._embedded.cinemas" class="clickable">
+               <a (click)="onGetSalle(cinema)" style="color: darkred"> {{cinema.name}} </a>
+             </li>
+           </ul>
+          <br>
+          <div class="row" *ngIf="salles">
+            <div *ngFor="let salle of salles._embedded.salles" class="col-sm-6">
+              <div class="panel panel-default">
+                <div class="panel-heading">{{salle.name}}</div>
+                <div class="panel-body" *ngIf="salle.projections">
+                <div class="row"> 
+                  <div class="col-sm-5">
+                    <img src="{{salle.projections._embedded.projections[0].film.photo}}" alt="{{salle.projections._embedded.projections[0].film.photo}}">   
+                    <button class="btn btn-danger" style="margin-top: 10px;" (click)="moreDetails(salle.projections._embedded.projections[0].film.id)">More details</button>      
+                  </div>
+                  <div class="col-sm-7">
+                    <ul class="list-group">
+                      <li class="list-group-item">Seances:</li>
+                      <li [ngClass]="proj==currentProjection?'active':''"
+                          (click)="onGetPlaces(proj)" *ngFor="let proj of salle.projections._embedded.projections" class="list-group-item clickable">
+                        {{proj.seance.startTime}} => Price: {{proj.price|number:'0.00'}} $
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="card" *ngIf="showDetails && salle.projections._embedded.projections[0].film.id==film.id">
+                  <div class="card-body">
+                  
+                   <h5 class="card-title">{{film.title}}</h5>
+                   <h6 class="card-subtitle mb-2 text-muted">Director: {{film.director}}</h6>
+                   <p class="card-text">{{film.description}}</p>
+                   <a href="#" class="card-link">Release: {{film.releaseDate}} = </a>
+                   <a href="#" class="card-link">Duration: {{film.duration}}</a>
+                    
+                 </div>
+                </div> <br>
+                  <div *ngIf="currentProjection">
+                    <div *ngIf="salle.id==currentProjection.salle.id">
+                    <div class="row" *ngIf="currentProjection.tickets">
+                      <button class="{{getTicketClass(t)}} ticket" (click)="onSelectTicket(t)" [disabled]="t.reserve==true"
+                              *ngFor="let t of currentProjection.tickets._embedded.tickets">
+                        {{t.place.number}}
+                      </button>
+                    </div>
+                      <div *ngIf="selectedTickets.length>0">
+                        <form #f="ngForm" (ngSubmit)="onPayTicket(f.value)">
+                           <div class="form-group">
+                              <label class="control-label">Name client</label>
+                               <input class="form-control" name="nameClient" ngModel type="text"/>
+                           </div>
+
+                          <div class="form-group">
+                            <label class="control-label">Code payement</label>
+                            <input class="form-control" name="codePayment" ngModel type="text"/>
+                          </div>
+                          <button class="btn btn-success" type="submit">Puy Now</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

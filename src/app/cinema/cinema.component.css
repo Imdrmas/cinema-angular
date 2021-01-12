@@ -1,0 +1,16 @@
+.clickable{
+    cursor: pointer;
+  }
+  .ticket {
+    margin: 5px;
+    width: 40px;
+    text-align: center;
+  }
+  .card {
+    background: #dfe6e9;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .card a {
+    color: brown;
+  }
